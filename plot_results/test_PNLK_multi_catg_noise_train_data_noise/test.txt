@@ -1,0 +1,20 @@
+###### 5 Degree & 0.05 Units ######
+Accuray: 0%
+Mean rotational error: 0
+Mean translation error: 0
+Var translation error: 0
+Var rotational error: 0
+
+###### 10 Degree & 0.1 Units ######
+Accuray: 0%
+Mean rotational error: 0
+Mean translation error: 0
+Var translation error: 0
+Var rotational error: 0
+
+###### 20 Degree & 0.2 Units ######
+Accuray: 0.0591715976331%
+Mean rotational error: 17.5540055594
+Mean translation error: 0.15202580454
+Var translation error: 0.000810186433397
+Var rotational error: 3.00681431419

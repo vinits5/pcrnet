@@ -1,0 +1,7 @@
+Model:						pointnet_pose
+Model Path:					log_multi_catg_noise/model300.ckpt
+Data Dict:					train_data
+Log Dir:					test_itr_multi_catg_noise_train_data_45
+Evaluation Pose:			itr_net_test_data45.csv
+Max Allowed Iterations:		5
+Threshold for convergence:	1e-07

@@ -1,0 +1,5 @@
+Data Dict:					result_02.csv
+Log Dir:					test_PNLK_multi_catg_noise_train_data_noise
+Evaluation Pose:			itr_net_test_data45.csv
+Max Allowed Iterations:		20
+Threshold for convergence:	1e-07

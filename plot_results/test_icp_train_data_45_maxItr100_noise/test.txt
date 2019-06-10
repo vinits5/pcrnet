@@ -1,0 +1,34 @@
+Mean of Time: 0.407465872633
+
+###### 5 Degree & 0.05 Units ######
+Accuray: 64.0631163708%
+Mean rotational error: 1.14823544112
+Mean translation error: 0.00469028932455
+Mean time: 0.390102947287
+Var time: 0.0211579089673
+Var translation error: 1.71296891103e-05
+Var rotational error: 0.398029941717
+Mean Iterations: 24
+Var Iterations: 72.0893470442
+
+###### 10 Degree & 0.1 Units ######
+Accuray: 67.2781065089%
+Mean rotational error: 1.30556365396
+Mean translation error: 0.00765393030033
+Mean time: 0.389195435699
+Var time: 0.021031814201
+Var translation error: 0.000208918279425
+Var rotational error: 1.14837752021
+Mean Iterations: 24
+Var Iterations: 71.779552951
+
+###### 20 Degree & 0.2 Units ######
+Accuray: 69.2899408284%
+Mean rotational error: 1.6374142949
+Mean translation error: 0.00964337597749
+Mean time: 0.388599120956
+Var time: 0.021024248749
+Var translation error: 0.000362003489818
+Var rotational error: 5.32544865283
+Mean Iterations: 24
+Var Iterations: 71.6097287056
