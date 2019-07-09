@@ -161,11 +161,8 @@ def conv2d(inputs,
       outputs = tf.nn.bias_add(outputs, biases)
 
       if bn:
-        pass
-        # outputs = batch_norm_for_conv2d(outputs, is_training,
-                                       # bn_decay=bn_decay, scope='bn')
-        # outputs = batch_norm_for_conv2d(outputs, is_training,
-        #                                 bn_decay=bn_decay, scope=scope)
+        outputs = batch_norm_for_conv2d(outputs, is_training,
+                                       bn_decay=bn_decay, scope='bn')
 
       if activation_fn is not None:
         outputs = activation_fn(outputs)
@@ -343,9 +340,7 @@ def fully_connected(inputs,
     outputs = tf.nn.bias_add(outputs, biases)
      
     if bn:
-      pass
-      # outputs = batch_norm_for_fc(outputs, is_training, bn_decay, 'bn')
-      # outputs = batch_norm_for_fc(outputs, is_training, bn_decay, scope)
+      outputs = batch_norm_for_fc(outputs, is_training, bn_decay, 'bn')
 
     if activation_fn is not None:
       outputs = activation_fn(outputs)

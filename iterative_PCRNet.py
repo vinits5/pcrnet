@@ -24,7 +24,7 @@ parser.add_argument('-noise','--add_noise', type=bool, required=True, default=Fa
 
 parser.add_argument('--iterations', type=int, default=8, help='No of Iterations for pose estimation')
 parser.add_argument('--gpu', type=int, default=0, help='GPU to use [default: GPU 0]')
-parser.add_argument('--model', default='pcr_model', help='Model name: pointnet_cls or pointnet_cls_basic [default: pointnet_cls]')
+parser.add_argument('--model', default='ipcr_model', help='Model name: pointnet_cls or pointnet_cls_basic [default: pointnet_cls]')
 parser.add_argument('--num_point', type=int, default=1024, help='Point Number [256/512/1024/2048] [default: 1024]')
 parser.add_argument('--max_epoch', type=int, default=301, help='Epoch to run [default: 250]')
 parser.add_argument('--batch_size', type=int, default=32, help='Batch Size during training [default: 32]')
@@ -106,18 +106,7 @@ def get_learning_rate(batch):
 						DECAY_RATE,          # Decay rate.
 						staircase=True)
 	learning_rate = tf.maximum(learning_rate, 0.00001) # CLIP THE LEARNING RATE!
-	return learning_rate        
-
-# Get Batch Normalization decay.
-def get_bn_decay(batch):
-	bn_momentum = tf.train.exponential_decay(
-					  BN_INIT_DECAY,
-					  batch*BATCH_SIZE,
-					  BN_DECAY_DECAY_STEP,
-					  BN_DECAY_DECAY_RATE,
-					  staircase=True)
-	bn_decay = tf.minimum(BN_DECAY_CLIP, 1 - bn_momentum)
-	return bn_decay
+	return learning_rate
 
 def train():
 	with tf.Graph().as_default():
@@ -126,7 +115,6 @@ def train():
 			
 		with tf.device('/gpu:'+str(GPU_INDEX)):
 			is_training_pl = tf.placeholder(tf.bool, shape=())			# Flag for dropouts.
-			bn_decay = get_bn_decay(batch)								# Calculate BN decay.
 			learning_rate = get_learning_rate(batch)					# Calculate Learning Rate at each step.
 
 			# Define a network to backpropagate the using final pose prediction.
@@ -134,9 +122,9 @@ def train():
 				# Get the placeholders.
 				source_pointclouds_pl, template_pointclouds_pl = MODEL.placeholder_inputs(BATCH_SIZE, NUM_POINT)
 				# Extract Features.
-				source_global_feature, template_global_feature = MODEL.get_model(source_pointclouds_pl, template_pointclouds_pl, is_training_pl, bn_decay=bn_decay)
+				source_global_feature, template_global_feature = MODEL.get_model(source_pointclouds_pl, template_pointclouds_pl, is_training_pl, bn_decay=None)
 				# Find the predicted transformation.
-				predicted_transformation = MODEL.get_pose(source_global_feature,template_global_feature,is_training_pl, bn_decay=bn_decay)
+				predicted_transformation = MODEL.get_pose(source_global_feature,template_global_feature,is_training_pl, bn_decay=None)
 				# Find the loss using source and transformed template point cloud.
 				loss = MODEL.get_loss(predicted_transformation, BATCH_SIZE, template_pointclouds_pl, source_pointclouds_pl)
 				# Add the loss in tensorboard.
@@ -153,7 +141,6 @@ def train():
 			# Add ops to save and restore all the variables.
 			saver = tf.train.Saver()
 			tf.summary.scalar('loss', loss)
-			tf.summary.scalar('bn_decay', bn_decay)						# Write BN decay in summary.
 			tf.summary.scalar('learning_rate', learning_rate)
 
 			
@@ -230,7 +217,6 @@ def train_one_epoch(sess, ops, train_writer, templates, poses):
 
 	loss_sum = 0											# Total Loss in each batch.
 	num_batches = int(templates.shape[0]/BATCH_SIZE)		# Number of batches in an epoch.
-	num_batches=2
 
 	# Training for each batch.
 	for fn in range(num_batches):

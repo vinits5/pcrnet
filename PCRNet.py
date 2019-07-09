@@ -22,7 +22,7 @@ parser.add_argument('-results','--results', required=True, type=str, default='be
 
 
 parser.add_argument('--gpu', type=int, default=0, help='GPU to use [default: GPU 0]')
-parser.add_argument('--model', default='pointnet_pose', help='Model name: pointnet_cls or pointnet_cls_basic [default: pointnet_cls]')
+parser.add_argument('--model', default='pcr_model', help='Model name: pointnet_cls or pointnet_cls_basic [default: pointnet_cls]')
 parser.add_argument('--num_point', type=int, default=1024, help='Point Number [256/512/1024/2048] [default: 1024]')
 parser.add_argument('--max_epoch', type=int, default=501, help='Epoch to run [default: 250]')
 parser.add_argument('--batch_size', type=int, default=32, help='Batch Size during training [default: 32]')
@@ -78,7 +78,7 @@ LOG_DIR = FLAGS.log_dir
 if FLAGS.mode == 'train':
 	if not os.path.exists(LOG_DIR): os.mkdir(LOG_DIR)			# Create Log_dir to store the log.
 	os.system('cp %s %s' % (MODEL_FILE, LOG_DIR)) 				# bkp of model def
-	os.system('cp siamese_network_train.py %s' % (LOG_DIR)) 	# bkp of train procedure
+	os.system('cp train_PCRNet.py %s' % (LOG_DIR)) 	# bkp of train procedure
 	os.system('cp -a utils/ %s/'%(LOG_DIR))						# Store the utils code.
 	os.system('cp helper.py %s'%(LOG_DIR))
 	LOG_FOUT = open(os.path.join(LOG_DIR, 'log_train.txt'), 'w')# Create a text file to store the loss function data.
@@ -99,18 +99,7 @@ def get_learning_rate(batch):
 						DECAY_RATE,          # Decay rate.
 						staircase=True)
 	learning_rate = tf.maximum(learning_rate, 0.00001) # CLIP THE LEARNING RATE!
-	return learning_rate        
-
-# Get Batch Normalization decay.
-def get_bn_decay(batch):
-	bn_momentum = tf.train.exponential_decay(
-					  BN_INIT_DECAY,
-					  batch*BATCH_SIZE,
-					  BN_DECAY_DECAY_STEP,
-					  BN_DECAY_DECAY_RATE,
-					  staircase=True)
-	bn_decay = tf.minimum(BN_DECAY_CLIP, 1 - bn_momentum)
-	return bn_decay
+	return learning_rate
 
 def train():
 	with tf.Graph().as_default():
@@ -119,7 +108,6 @@ def train():
 
 		with tf.device('/gpu:'+str(GPU_INDEX)):
 			is_training_pl = tf.placeholder(tf.bool, shape=())			# Flag for dropouts.
-			bn_decay = get_bn_decay(batch)								# Calculate BN decay.
 			learning_rate = get_learning_rate(batch)					# Calculate Learning Rate at each step.
 			# Define a network to backpropagate the using final pose prediction.
 			with tf.variable_scope('Network_L') as _:
@@ -128,9 +116,9 @@ def train():
 				# Get the placeholders.
 				source_pointclouds_pl_L, template_pointclouds_pl_L = network_L.placeholder_inputs(BATCH_SIZE, NUM_POINT)
 				# Extract Features.
-				source_global_feature_L, template_global_feature_L = network_L.get_model(source_pointclouds_pl_L, template_pointclouds_pl_L, FLAGS.feature_size, is_training_pl, bn_decay=bn_decay)
+				source_global_feature_L, template_global_feature_L = network_L.get_model(source_pointclouds_pl_L, template_pointclouds_pl_L, FLAGS.feature_size, is_training_pl, bn_decay=None)
 				# Find the predicted transformation.
-				predicted_transformation_L = network_L.get_pose(source_global_feature_L,template_global_feature_L,is_training_pl,bn_decay=bn_decay)
+				predicted_transformation_L = network_L.get_pose(source_global_feature_L,template_global_feature_L,is_training_pl,bn_decay=None)
 				# Find the loss using source and transformed template point cloud.
 				loss = network_L.get_loss_b(predicted_transformation_L,BATCH_SIZE,template_pointclouds_pl_L,source_pointclouds_pl_L)
 
@@ -149,7 +137,6 @@ def train():
 			saver = tf.train.Saver()
 			# Add the loss in tensorboard.
 			tf.summary.scalar('learning_rate', learning_rate)
-			tf.summary.scalar('bn_decay', bn_decay)						# Write BN decay in summary.
 			tf.summary.scalar('loss', loss)
 
 		# Create a session

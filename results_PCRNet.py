@@ -72,18 +72,7 @@ def get_learning_rate(batch):
 						DECAY_RATE,          # Decay rate.
 						staircase=True)
 	learning_rate = tf.maximum(learning_rate, 0.00001) # CLIP THE LEARNING RATE!
-	return learning_rate        
-
-# Get Batch Normalization decay.
-def get_bn_decay(batch):
-	bn_momentum = tf.train.exponential_decay(
-					  BN_INIT_DECAY,
-					  batch*BATCH_SIZE,
-					  BN_DECAY_DECAY_STEP,
-					  BN_DECAY_DECAY_RATE,
-					  staircase=True)
-	bn_decay = tf.minimum(BN_DECAY_CLIP, 1 - bn_momentum)
-	return bn_decay
+	return learning_rate
 
 def find_errors(gt_pose, final_pose):
 	# Simple euler distand between translation part.
@@ -109,7 +98,6 @@ def train():
 
 		with tf.device('/gpu:'+str(GPU_INDEX)):
 			is_training_pl = tf.placeholder(tf.bool, shape=())			# Flag for dropouts.
-			bn_decay = get_bn_decay(batch)								# Calculate BN decay.
 			learning_rate = get_learning_rate(batch)					# Calculate Learning Rate at each step.
 			
 			# Define a network to backpropagate the using final pose prediction.
@@ -119,9 +107,9 @@ def train():
 				# Get the placeholders.
 				source_pointclouds_pl_L, template_pointclouds_pl_L = network_L.placeholder_inputs(BATCH_SIZE, NUM_POINT)
 				# Extract Features.
-				source_global_feature_L, template_global_feature_L = network_L.get_model(source_pointclouds_pl_L, template_pointclouds_pl_L, FLAGS.feature_size, is_training_pl, bn_decay=bn_decay)
+				source_global_feature_L, template_global_feature_L = network_L.get_model(source_pointclouds_pl_L, template_pointclouds_pl_L, FLAGS.feature_size, is_training_pl, bn_decay=None)
 				# Find the predicted transformation.
-				predicted_transformation_L = network_L.get_pose(source_global_feature_L,template_global_feature_L,is_training_pl,bn_decay=bn_decay)
+				predicted_transformation_L = network_L.get_pose(source_global_feature_L,template_global_feature_L,is_training_pl,bn_decay=None)
 			loss = 0
 
 		with tf.device('/cpu:0'):
