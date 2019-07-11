@@ -18,7 +18,7 @@ RESULTS="best_model"	# Keep saving network model after each epoch.
 NOISE=false				# To train network with noise in source data.
 
 # Train iterative PCRNet
-$PY iterative_PCRNet.py -log $LOG_DIR -mode $MODE -results $RESULTS -noise $NOISE
+#$PY iterative_PCRNet.py -log $LOG_DIR -mode $MODE -results $RESULTS -noise $NOISE
 
 WEIGHTS=$PWD/$LOG_DIR/$RESULTS".ckpt"
 LOG_RESULTS="results_itrPCRNet"
@@ -30,5 +30,5 @@ $PY results_itrPCRNet.py -weights $WEIGHTS -log $LOG_RESULTS -noise $NOISE
 # Visualize the results for various templates
 for i in 0 700 1900 3000 4000 5000
 do
-	$PY visualize_results.py -weights $WEIGHTS -idx $IDX
+	$PY visualize_results.py -weights $WEIGHTS -idx $i
 done

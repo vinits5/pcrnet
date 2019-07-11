@@ -35,7 +35,7 @@ parser.add_argument('--decay_step', type=int, default=3000000, help='Decay step 
 parser.add_argument('--decay_rate', type=float, default=0.7, help='Decay rate for lr decay [default: 0.8]')
 parser.add_argument('--model_path', type=str, default='log_multi_catg_noise/model300.ckpt', help='Path of the weights (.ckpt file) to be used for test')
 parser.add_argument('--centroid_sub', type=bool, default=True, help='Centroid Subtraction from Source and Template before Pose Prediction.')
-parser.add_argument('--use_partial_data', type=bool, default=False, help='Use of Partial Data for Registration')
+parser.add_argument('--use_partial_data', type=bool, default=True, help='Use of Partial Data for Registration')
 parser.add_argument('--use_pretrained_model', type=bool, default=False, help='Use a pretrained model of airplane to initialize the training.')
 parser.add_argument('--use_random_poses', type=bool, default=False, help='Use of random poses to train the model in each batch')
 parser.add_argument('--data_dict', type=str, default='train_data',help='Templates data used for training network')
