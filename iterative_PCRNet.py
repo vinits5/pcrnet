@@ -15,6 +15,7 @@ sys.path.append(os.path.join(BASE_DIR, 'utils'))
 import tf_util
 import helper
 import transforms3d.euler as t3d
+from helper import print_
 
 parser = argparse.ArgumentParser()
 parser.add_argument('-mode','--mode', required=True, type=str, default='no_mode', help='mode: train or test')
@@ -35,7 +36,7 @@ parser.add_argument('--decay_step', type=int, default=3000000, help='Decay step 
 parser.add_argument('--decay_rate', type=float, default=0.7, help='Decay rate for lr decay [default: 0.8]')
 parser.add_argument('--model_path', type=str, default='log_multi_catg_noise/model300.ckpt', help='Path of the weights (.ckpt file) to be used for test')
 parser.add_argument('--centroid_sub', type=bool, default=True, help='Centroid Subtraction from Source and Template before Pose Prediction.')
-parser.add_argument('--use_partial_data', type=bool, default=True, help='Use of Partial Data for Registration')
+parser.add_argument('--use_partial_data', type=bool, default=False, help='Use of Partial Data for Registration')
 parser.add_argument('--use_pretrained_model', type=bool, default=False, help='Use a pretrained model of airplane to initialize the training.')
 parser.add_argument('--use_random_poses', type=bool, default=False, help='Use of random poses to train the model in each batch')
 parser.add_argument('--data_dict', type=str, default='train_data',help='Templates data used for training network')
@@ -83,9 +84,10 @@ LOG_DIR = FLAGS.log_dir
 
 # Take backup of all files used to train the network with all the parameters.
 if FLAGS.mode == 'train':
+	print_('################### Creating Log Dir ###################', color='r', style='bold')
 	if not os.path.exists(LOG_DIR): os.mkdir(LOG_DIR)			# Create Log_dir to store the log.
 	os.system('cp %s %s' % (MODEL_FILE, LOG_DIR)) 				# bkp of model def
-	os.system('cp train_iPCRNet.py %s' % (LOG_DIR)) 	# bkp of train procedure
+	os.system('cp iterative_PCRNet.py %s' % (LOG_DIR)) 	# bkp of train procedure
 	os.system('cp -a utils/ %s/'%(LOG_DIR))						# Store the utils code.
 	os.system('cp helper.py %s'%(LOG_DIR))
 	LOG_FOUT = open(os.path.join(LOG_DIR, 'log_train.txt'), 'w')# Create a text file to store the loss function data.
@@ -181,6 +183,7 @@ def train():
 		eval_poses = helper.read_poses(FLAGS.data_dict, EVAL_POSES)			# Read all the poses data for evaluation.
 
 		if FLAGS.mode == 'train':
+			print_('Training Started!', color='r', style='bold')
 			# For actual training.
 			for epoch in range(MAX_EPOCH):
 				log_string('**** EPOCH %03d ****' % (epoch))
@@ -196,6 +199,7 @@ def train():
 					# Store the Trained weights in log directory.
 					save_path = saver.save(sess, os.path.join(LOG_DIR, "models", "model"+str(epoch)+".ckpt"))
 					log_string("Model saved in file: %s" % save_path)
+			print_('Training Successful!!', color='r', style='bold')
 
 		
 # Train the Network and copy weights from Network to Network19 to find the poses between source and template.
@@ -439,6 +443,6 @@ if __name__ == "__main__":
 	if FLAGS.mode == 'no_mode':
 		print('Specity a mode argument: train')
 	elif FLAGS.mode == 'train':
-		helper.download_data(FLAGS.data_dict)
+		if helper.download_data(FLAGS.data_dict): print_('################### Data Downloading Finished ###################', color='g', style='bold')
 		train()
 		LOG_FOUT.close()
