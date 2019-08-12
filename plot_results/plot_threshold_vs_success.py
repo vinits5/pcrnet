@@ -36,9 +36,14 @@ def read_csv(folder_name):
 
 	# Log stored is as per following sequence in csv files:
 	# Sr. No. [0], time taken [1], number of iterations [2], translation error [3], rotation error [4].
-	for data_i in data:
-		rot_err.append(data_i[4])
-		trans_err.append(data_i[3])
+	if folder_name[5:9]=='PNLK':
+		for data_i in data:
+			rot_err.append(data_i[2])
+			trans_err.append(data_i[1])
+	else:	
+		for data_i in data:
+			rot_err.append(data_i[4])
+			trans_err.append(data_i[3])
 	return rot_err, trans_err
 
 # It will count the total number of test cases having rotation error below certain threshold.
@@ -71,7 +76,7 @@ def make_plot(files, labels):
 		rot_err, trans_err = read_csv(files[file_idx])
 		success_dict = count_success_rot(rot_err)
 
-		x_range = success_dict.keys()
+		x_range = list(success_dict.keys())
 		x_range.sort()
 		success = []
 		for i in x_range:
