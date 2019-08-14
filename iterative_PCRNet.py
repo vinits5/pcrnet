@@ -21,7 +21,8 @@ parser = argparse.ArgumentParser()
 parser.add_argument('-mode','--mode', required=True, type=str, default='no_mode', help='mode: train or test')
 parser.add_argument('-log','--log_dir', required=True, default='log_itrPCRNet', help='Log dir [default: log]')
 parser.add_argument('-results','--results', required=True, type=str, default='best_model', help='Store the best model')
-parser.add_argument('-noise','--add_noise', type=bool, required=True, default=False, help='Use of Noise in source data in training')
+parser.add_argument('-noise','--Noise', type=str, required=True, default=False, help='Use of Noise in source data in training')
+parser.add_argument('--add_noise', type=bool, default=False, help='Use of Noise in source data in training')
 
 parser.add_argument('--iterations', type=int, default=8, help='No of Iterations for pose estimation')
 parser.add_argument('--gpu', type=int, default=0, help='GPU to use [default: GPU 0]')
@@ -52,6 +53,12 @@ if FLAGS.mode == 'test':
 	BATCH_SIZE = 1
 else:
 	BATCH_SIZE = FLAGS.batch_size
+	
+# Change Noise Condition.
+if FLAGS.Noise == 'True':
+	FLAGS.add_noise = True
+elif FLAGS.Noise == 'False':
+	FLAGS.add_noise = False
 
 # Do/Don't Use Noise
 if FLAGS.add_noise: ADD_NOISE = 1.0
