@@ -244,11 +244,6 @@ def train_one_epoch(sess, ops, train_writer, templates, poses):
 			source_data = source_data - np.mean(source_data, axis=1, keepdims=True)
 			template_data = template_data - np.mean(template_data, axis=1, keepdims=True)
 
-		if FLAGS.use_partial_data:
-			complete_source_data = np.copy(source_data)							# Store full source point cloud.
-			source_data = helper.find_partial_data(complete_source_data)		# Find partial source point cloud (Bx512x3)
-			template_data = helper.find_partial_data(template_data)	# Find partial template point cloud (Bx512x3)
-
 		# Chose Random Points from point clouds for training.
 		if np.random.random_sample()<0.0:
 			source_data = helper.select_random_points(source_data, NUM_POINT)						# 50% probability that source data has different points than template
@@ -280,11 +275,7 @@ def train_one_epoch(sess, ops, train_writer, templates, poses):
 
 			# 4b,4c
 			# Apply the transformation on the template data and multiply it to transformation matrix obtained in previous iteration.
-			if FLAGS.use_partial_data:
-				TRANSFORMATIONS, complete_source_data = helper.transformation_quat2mat(predicted_transformation, TRANSFORMATIONS, complete_source_data)
-				source_data = helper.find_partial_data(complete_source_data)
-			else:
-				TRANSFORMATIONS, source_data = helper.transformation_quat2mat(predicted_transformation, TRANSFORMATIONS, source_data)
+			TRANSFORMATIONS, source_data = helper.transformation_quat2mat(predicted_transformation, TRANSFORMATIONS, source_data)
 
 			# Display Results after each iteration.
 			if display_poses_in_itr:
@@ -303,11 +294,7 @@ def train_one_epoch(sess, ops, train_writer, templates, poses):
 		train_writer.add_summary(summary, step)		# Add all the summary to the tensorboard.
 
 		# Apply the final transformation on the template data and multiply it with the transformation matrix obtained from N-Iterations.
-		if FLAGS.use_partial_data:
-			TRANSFORMATIONS, complete_source_data = helper.transformation_quat2mat(predicted_transformation, TRANSFORMATIONS, complete_source_data)
-			source_data = helper.find_partial_data(complete_source_data)
-		else:
-			TRANSFORMATIONS, source_data = helper.transformation_quat2mat(predicted_transformation, TRANSFORMATIONS, source_data)
+		TRANSFORMATIONS, source_data = helper.transformation_quat2mat(predicted_transformation, TRANSFORMATIONS, source_data)
 
 		# final_pose = helper.find_final_pose_inv(TRANSFORMATIONS)			# Find the final pose (translation, orientation (euler angles in degrees)) from transformation matrix.
 
@@ -363,11 +350,6 @@ def eval_one_epoch(sess, ops, eval_writer, templates, poses):
 			source_data = source_data - np.mean(source_data, axis=1, keepdims=True)
 			template_data = template_data - np.mean(template_data, axis=1, keepdims=True)
 
-		if FLAGS.use_partial_data:
-			complete_source_data = np.copy(source_data)
-			source_data = helper.find_partial_data(complete_source_data)
-			template_data = helper.find_partial_data(template_data)
-
 		# Chose Random Points from point clouds for training.
 		if np.random.random_sample()<0.0:
 			source_data = helper.select_random_points(source_data, NUM_POINT)						# 30% probability that source data has different points than template
@@ -399,11 +381,7 @@ def eval_one_epoch(sess, ops, eval_writer, templates, poses):
 
 			# 4b,4c
 			# Apply the transformation on the template data and multiply it to transformation matrix obtained in previous iteration.
-			if FLAGS.use_partial_data:
-				TRANSFORMATIONS, complete_source_data = helper.transformation_quat2mat(predicted_transformation, TRANSFORMATIONS, complete_source_data)
-				source_data = helper.find_partial_data(complete_source_data)
-			else:
-				TRANSFORMATIONS, source_data = helper.transformation_quat2mat(predicted_transformation, TRANSFORMATIONS, source_data)
+			TRANSFORMATIONS, source_data = helper.transformation_quat2mat(predicted_transformation, TRANSFORMATIONS, source_data)
 
 			# Display Results after each iteration.
 			if display_poses_in_itr:
@@ -423,11 +401,7 @@ def eval_one_epoch(sess, ops, eval_writer, templates, poses):
 		eval_writer.add_summary(summary, step)			# Add all the summary to the tensorboard.
 
 		# Apply the final transformation on the template data and multiply it with the transformation matrix obtained from N-Iterations.
-		if FLAGS.use_partial_data:
-			TRANSFORMATIONS, complete_source_data = helper.transformation_quat2mat(predicted_transformation, TRANSFORMATIONS, complete_source_data)
-			source_data = helper.find_partial_data(complete_source_data)
-		else:
-			TRANSFORMATIONS, source_data = helper.transformation_quat2mat(predicted_transformation, TRANSFORMATIONS, source_data)
+		TRANSFORMATIONS, source_data = helper.transformation_quat2mat(predicted_transformation, TRANSFORMATIONS, source_data)
 
 		final_pose = helper.find_final_pose_inv(TRANSFORMATIONS)		# Find the final pose (translation, orientation (euler angles in degrees)) from transformation matrix.
 

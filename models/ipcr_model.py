@@ -77,7 +77,8 @@ def get_loss(predicted_transformation, batch_size, template_pointclouds_pl, sour
 
 		transformed_predicted_point_cloud = helper.transformation_quat_tensor(source_pointclouds_pl, predicted_norm_quat,predicted_position)
 
-		loss = tf_util_loss.earth_mover(template_pointclouds_pl, transformed_predicted_point_cloud)
+		#loss = tf_util_loss.earth_mover(template_pointclouds_pl, transformed_predicted_point_cloud)
+		loss = tf_util_loss.chamfer(template_pointclouds_pl, transformed_predicted_point_cloud)
 	return loss
 
 if __name__=='__main__':

@@ -1,6 +1,7 @@
 #!/bin/bash
 
 cd $PWD/utils/pc_distance/
+make -f makefile_10.0 clean
 make -f makefile_10.0		# Change name to makefile_8.0 if you have CUDA-8.0 and Ubuntu-14.04
 cd $PWD/../..
 
@@ -13,9 +14,9 @@ PY="python3"
 
 
 LOG_DIR="log_itrPCRNet"		# Folder name to store log.4
-MODE="train"			# Either train or test.
+MODE="train"				# Either train or test.
 RESULTS="best_model"		# Keep saving network model after each epoch.
-NOISE=False			# To train network with noise in source data. (False/True)
+NOISE=False					# To train network with noise in source data. (False/True)
 
 # Train iterative PCRNet
 $PY iterative_PCRNet.py -log $LOG_DIR -mode $MODE -results $RESULTS -noise $NOISE

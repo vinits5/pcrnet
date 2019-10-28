@@ -54,8 +54,8 @@ class Network:
 		net = tf.reshape(net, [batch_size, -1])
 		 
 		# Extract the features from the network.
-		source_global_feature = tf.slice(net, [0,0], [batch_size/2,feature_size])
-		template_global_feature = tf.slice(net, [batch_size/2,0], [batch_size/2,feature_size])
+		source_global_feature = tf.slice(net, [0,0], [int(batch_size/2),feature_size])
+		template_global_feature = tf.slice(net, [int(batch_size/2),0], [int(batch_size/2),feature_size])
 		return source_global_feature, template_global_feature
 
 	def get_pose(self,source_global_feature,template_global_feature,is_training,bn_decay=None):
@@ -85,7 +85,8 @@ class Network:
 			transformed_predicted_point_cloud = helper.transformation_quat_tensor(source_pointclouds_pl, predicted_norm_quat, predicted_position)
 
 			# Use 1024 Points to find loss.
-			loss = tf_util_loss.earth_mover(template_pointclouds_pl, transformed_predicted_point_cloud)
+			#loss = tf_util_loss.earth_mover(template_pointclouds_pl, transformed_predicted_point_cloud)
+			loss = tf_util_loss.chamfer(template_pointclouds_pl, transformed_predicted_point_cloud)
 			# loss = 0
 		return loss
 
