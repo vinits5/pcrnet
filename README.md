@@ -1,6 +1,6 @@
 # Point Cloud Registration Network
 
-**[Paper](https://arxiv.org/abs/1908.07906)**
+**[[Paper]](https://arxiv.org/abs/1908.07906)**
 
 <p align="center">
 	<img src="https://github.com/vinits5/pcrnet/blob/master/images/first_fig.png">
