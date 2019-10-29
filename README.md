@@ -1,14 +1,16 @@
 # Point Cloud Registration Network
 
+**[Paper]**(https://arxiv.org/abs/1908.07906)
+
 <p align="center">
 	<img src="https://github.com/vinits5/pcrnet/blob/master/images/first_fig.png">
 </p>
 
 ### Requirements:
 1. Cuda 10
-2. Tensorflow 1.14
-3. transforms3d 0.3.1
-4. h5py 2.9.0
+2. tensorflow==1.14
+3. transforms3d==0.3.1
+4. h5py==2.9.0
 
 ### Dataset:
 Path for dataset: [Link](https://drive.google.com/drive/folders/19X68JeiXdeZgFp3cuCVpac4aLLw4StHZ?usp=sharing)
