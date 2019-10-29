@@ -3,7 +3,7 @@
 **[[Paper]](https://arxiv.org/abs/1908.07906)**
 
 <p align="center">
-	<img src="https://github.com/vinits5/pcrnet/blob/master/images/first_fig.png">
+	<img src="https://github.com/vinits5/pcrnet/blob/master/images/first_fig.png" width="640" height="480">
 </p>
 
 ### Requirements:
