@@ -1,5 +1,7 @@
 # Point Cloud Registration Network
 
+Source Code Author: Vinit Sarode and Xueqian Li
+
 **[[Paper]](https://arxiv.org/abs/1908.07906)**
 
 <p align="center">
@@ -34,3 +36,14 @@ Download pretrained models from [Link](https://drive.google.com/drive/folders/1o
 #### Train PCRNet:
 1. chmod +x train_PCRNet.sh
 2. ./train_PCRNet.sh
+
+### Citation
+
+```
+@InProceedings{vsarode2019pcrnet,
+       author = {Sarode, Vinit and Li, Xueqian and Goforth, Hunter and Aoki, Yasuhiro and Arun Srivatsan, Rangaprasad and Lucey, Simon and Choset, Howie},
+       title = {PCRNet: Point Cloud Registration Network using PointNet Encoding},
+       month = {Aug},
+       year = {2019}
+}
+```
