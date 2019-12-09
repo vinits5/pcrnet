@@ -28,10 +28,9 @@ parser.add_argument('--batch_size', type=int, default=1, help='Batch Size during
 parser.add_argument('--filename', type=str, default='test', help='Name of files')
 
 # Data parameters
-parser.add_argument('--template_idx', type=int, default=0, help='Index of template to be used for evaluation of network')
+parser.add_argument('--template_idx', type=int, default=2, help='Index of template to be used for evaluation of network')
 parser.add_argument('--data_dict', type=str, default='car_data',help='Data used to train templates or multi_model_templates')
 parser.add_argument('--eval_poses', type=str, default='itr_net_test_data45.csv', help='Poses for evaluation')
-parser.add_argument('--pairs_file', type=str, default='itr_net_test_data_pairs.csv', help='Pairs of templates and poses')
 
 # Useful and default parameters.
 parser.add_argument('--gpu', type=int, default=0, help='GPU to use [default: GPU 0]')
@@ -140,12 +139,11 @@ def train():
 			
 		#templates = helper.process_templates(FLAGS.data_dict)							# Read all the templates.
 		templates = helper.loadData(FLAGS.data_dict)
-		pairs = helper.read_pairs(FLAGS.data_dict, FLAGS.pairs_file)
 		eval_poses = helper.read_poses(FLAGS.data_dict, FLAGS.eval_poses)			# Read all the poses data for evaluation.
 		eval_poses = eval_poses[0:10,:]
-		eval_network(sess, ops_L, templates, eval_poses, pairs)
+		eval_network(sess, ops_L, templates, eval_poses)
 
-def eval_network(sess, ops, templates, poses, pairs):
+def eval_network(sess, ops, templates, poses):
 	# Arguments:
 	# sess: 		Tensorflow session to handle tensors.
 	# ops:			Dictionary for tensors of Network
@@ -180,8 +178,8 @@ def eval_network(sess, ops, templates, poses, pairs):
 			source_data = np.copy(sources[fn,:,:]).reshape(1,-1,3)
 			batch_euler_poses = poses[start_idx:end_idx]			# Extract poses for batch training.
 		else:
-			# template_idx = pairs[fn,1]
-			template_data = np.copy(templates[2,:,:]).reshape(1,-1,3)				# As template_data is changing.
+			template_idx = FLAGS.template_idx
+			template_data = np.copy(templates[template_idx,:,:]).reshape(1,-1,3)				# As template_data is changing.
 			batch_euler_poses = poses[start_idx:end_idx]			# Extract poses for batch training.
 			source_data = helper.apply_transformation(template_data, batch_euler_poses)		# Apply the poses on the templates to get source data.
 
@@ -259,7 +257,7 @@ def store_params(FLAGS):
 		file.write('Evaluation Pose:\t\t\t{}\n'.format(FLAGS.eval_poses))
 	return True
 
-def set_params(model, data_dict, model_path, log_dir, pairs_file, eval_poses):
+def set_params(model, data_dict, model_path, log_dir, eval_poses):
 	set_p = False
 	if not set_p:
 		if not os.path.exists(log_dir): os.mkdir(log_dir)
@@ -267,13 +265,12 @@ def set_params(model, data_dict, model_path, log_dir, pairs_file, eval_poses):
 		FLAGS.data_dict = data_dict
 		FLAGS.model_path = model_path
 		FLAGS.log_dir = log_dir
-		FLAGS.pairs_file = pairs_file
 		FLAGS.eval_poses = eval_poses
 		set_p = store_params(FLAGS)
 	return set_p
 
 if __name__=='__main__':
-	if set_params(FLAGS.model, FLAGS.data_dict, FLAGS.model_path, FLAGS.log_dir, FLAGS.pairs_file, FLAGS.eval_poses):
+	if set_params(FLAGS.model, FLAGS.data_dict, FLAGS.model_path, FLAGS.log_dir, FLAGS.eval_poses):
 		MODEL = importlib.import_module(FLAGS.model) # import network module
 		helper.download_data(FLAGS.data_dict)
 		train()
@@ -288,6 +285,6 @@ if __name__=='__main__':
 	# 	for ddt in data_dicts2test:
 	# 		for ept in eval_poses2test:
 	# 			log_dir = 'test_siamese_'+str(mpt[4:len(mpt)-14])+'_'+str(ddt)+'_'+str(ept[len(ept)-6:len(ept)-4])
-	# 			if set_params(FLAGS.model, ddt, mpt, log_dir, FLAGS.pairs_file, ept):
+	# 			if set_params(FLAGS.model, ddt, mpt, log_dir, ept):
 	# 				MODEL = importlib.import_module(FLAGS.model)
 	# 				train()
