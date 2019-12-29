@@ -142,18 +142,24 @@ def rotate_point_cloud_by_angle_y(batch_data, rotation_angle):
 		Return:
 		  BxNx3 array, rotated batch of point clouds
 	"""
-	rotated_data = np.zeros(batch_data.shape, dtype=np.float32)
-	for k in range(batch_data.shape[0]):
-		#rotation_angle = np.random.uniform() * 2 * np.pi
-		cosval = np.cos(rotation_angle)
-		sinval = np.sin(rotation_angle)
-		rotation_matrix = np.array([[cosval, 0, sinval],
-									[0, 1, 0],
-									[-sinval, 0, cosval]])
-		shape_pc = batch_data[k, ...]
-		# rotated_data[k, ...] = np.dot(shape_pc.reshape((-1, 3)), rotation_matrix)
-		rotated_data[k, ...] = np.dot(rotation_matrix, shape_pc.reshape((-1, 3)).T).T 		# Pre-Multiplication (changes done)
-	return rotated_data
+	cosval = np.cos(rotation_angle)
+	sinval = np.sin(rotation_angle)
+	rotation_matrix = np.array([[cosval, 0, sinval],
+								[0, 1, 0],
+								[-sinval, 0, cosval]])
+	return np.dot(rotation_matrix, batch_data.reshape((-1,3)).T).T
+	#rotated_data = np.zeros(batch_data.shape, dtype=np.float32)
+	#for k in range(batch_data.shape[0]):
+	#	#rotation_angle = np.random.uniform() * 2 * np.pi
+	#	cosval = np.cos(rotation_angle)
+	#	sinval = np.sin(rotation_angle)
+	#	rotation_matrix = np.array([[cosval, 0, sinval],
+	#								[0, 1, 0],
+	#								[-sinval, 0, cosval]])
+	#	shape_pc = batch_data[k, ...]
+	#	# rotated_data[k, ...] = np.dot(shape_pc.reshape((-1, 3)), rotation_matrix)
+	#	rotated_data[k, ...] = np.dot(rotation_matrix, shape_pc.reshape((-1, 3)).T).T 		# Pre-Multiplication (changes done)
+	#return rotated_data
 
 def rotate_point_cloud_by_angle_x(batch_data, rotation_angle):
 	""" Rotate the point cloud along up direction with certain angle.
@@ -162,18 +168,24 @@ def rotate_point_cloud_by_angle_x(batch_data, rotation_angle):
 		Return:
 		  BxNx3 array, rotated batch of point clouds
 	"""
-	rotated_data = np.zeros(batch_data.shape, dtype=np.float32)
-	for k in range(batch_data.shape[0]):
-		#rotation_angle = np.random.uniform() * 2 * np.pi
-		cosval = np.cos(rotation_angle)
-		sinval = np.sin(rotation_angle)
-		rotation_matrix = np.array([[1, 0, 0],
-									[0, cosval, -sinval],
-									[0, sinval, cosval]])
-		shape_pc = batch_data[k, ...]
-		# rotated_data[k, ...] = np.dot(shape_pc.reshape((-1, 3)), rotation_matrix)
-		rotated_data[k, ...] = np.dot(rotation_matrix, shape_pc.reshape((-1, 3)).T).T 		# Pre-Multiplication (changes done)
-	return rotated_data
+	cosval = np.cos(rotation_angle)
+	sinval = np.sin(rotation_angle)
+	rotation_matrix = np.array([[1, 0, 0],
+								[0, cosval, -sinval],
+								[0, sinval, cosval]])
+	return np.dot(rotation_matrix, batch_data.reshape((-1,3)).T).T
+	#rotated_data = np.zeros(batch_data.shape, dtype=np.float32)
+	#for k in range(batch_data.shape[0]):
+	#	#rotation_angle = np.random.uniform() * 2 * np.pi
+	#	cosval = np.cos(rotation_angle)
+	#	sinval = np.sin(rotation_angle)
+	#	rotation_matrix = np.array([[1, 0, 0],
+	#								[0, cosval, -sinval],
+	#								[0, sinval, cosval]])
+	#	shape_pc = batch_data[k, ...]
+	#	# rotated_data[k, ...] = np.dot(shape_pc.reshape((-1, 3)), rotation_matrix)
+	#	rotated_data[k, ...] = np.dot(rotation_matrix, shape_pc.reshape((-1, 3)).T).T 		# Pre-Multiplication (changes done)
+	#return rotated_data
 
 def rotate_point_cloud_by_angle_z(batch_data, rotation_angle):
 	""" Rotate the point cloud along up direction with certain angle.
@@ -182,18 +194,24 @@ def rotate_point_cloud_by_angle_z(batch_data, rotation_angle):
 		Return:
 		  BxNx3 array, rotated batch of point clouds
 	"""
-	rotated_data = np.zeros(batch_data.shape, dtype=np.float32)
-	for k in range(batch_data.shape[0]):
-		#rotation_angle = np.random.uniform() * 2 * np.pi
-		cosval = np.cos(rotation_angle)
-		sinval = np.sin(rotation_angle)
-		rotation_matrix = np.array([[cosval, -sinval, 0],
-									[sinval, cosval, 0],
-									[0, 0, 1]])
-		shape_pc = batch_data[k, ...]
-		# rotated_data[k, ...] = np.dot(shape_pc.reshape((-1, 3)), rotation_matrix)
-		rotated_data[k, ...] = np.dot(rotation_matrix, shape_pc.reshape((-1, 3)).T).T 		# Pre-Multiplication (changes done)
-	return rotated_data
+	cosval = np.cos(rotation_angle)
+	sinval = np.sin(rotation_angle)
+	rotation_matrix = np.array([[cosval, -sinval, 0],
+								[sinval, cosval, 0],
+								[0, 0, 1]])
+	return np.dot(rotation_matrix, batch_data.reshape((-1,3)).T).T
+	#rotated_data = np.zeros(batch_data.shape, dtype=np.float32)
+	#for k in range(batch_data.shape[0]):
+	#	#rotation_angle = np.random.uniform() * 2 * np.pi
+	#	cosval = np.cos(rotation_angle)
+	#	sinval = np.sin(rotation_angle)
+	#	rotation_matrix = np.array([[cosval, -sinval, 0],
+	#								[sinval, cosval, 0],
+	#								[0, 0, 1]])
+	#	shape_pc = batch_data[k, ...]
+	#	# rotated_data[k, ...] = np.dot(shape_pc.reshape((-1, 3)), rotation_matrix)
+	#	rotated_data[k, ...] = np.dot(rotation_matrix, shape_pc.reshape((-1, 3)).T).T 		# Pre-Multiplication (changes done)
+	#return rotated_data
 
 # Translate the data as per given translation vector.
 def translate(data,shift):
