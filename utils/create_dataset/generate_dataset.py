@@ -36,7 +36,7 @@ class Provider:
 		return (data, label)
 
 	def loadDataFile(self, filename):
-		return load_h5(filename)
+		return self.load_h5(filename)
 
 	def load_h5_data_label_seg(self, h5_filename):
 		f = h5py.File(h5_filename)
@@ -46,7 +46,7 @@ class Provider:
 		return (data, label, seg)
 
 	def loadDataFile_with_seg(self, filename):
-		return load_h5_data_label_seg(filename)
+		return self.load_h5_data_label_seg(filename)
 
 	def loadShapeNames(self, filename):
 		with open(filename) as file:
