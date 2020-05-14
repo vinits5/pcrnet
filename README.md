@@ -2,10 +2,10 @@
 
 Source Code Author: Vinit Sarode and Xueqian Li
 
-**[[Paper]](https://arxiv.org/abs/1908.07906)** | 
-**[[Website]](https://vinitsarode.weebly.com/pcrnet.html)** |
-**[[Video]](https://youtu.be/zPUHZYUwPJA)** | 
-**[[Pytorch Implementation]](https://github.com/vinits5/pcrnet_pytorch)**
+**[Paper](https://arxiv.org/abs/1908.07906) | 
+[Website](https://vinitsarode.weebly.com/pcrnet.html) |
+[Video](https://youtu.be/zPUHZYUwPJA) | 
+[Pytorch Implementation](https://github.com/vinits5/pcrnet_pytorch)**
 
 <p align="center">
 	<img src="https://github.com/vinits5/pcrnet/blob/master/images/first_fig.png" height="300">
