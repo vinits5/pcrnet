@@ -1,4 +1,4 @@
-# Point Cloud Registration Network
+# PCRNet: Point Cloud Registration Network using PointNet Encoding
 
 Source Code Author: Vinit Sarode and Xueqian Li
 
