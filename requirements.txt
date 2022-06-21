@@ -2,4 +2,4 @@
 transforms3d==0.3.1
 googledrivedownloader==0.4
 h5py==2.9.0
-numpy==1.16.3
+numpy==1.22.0
